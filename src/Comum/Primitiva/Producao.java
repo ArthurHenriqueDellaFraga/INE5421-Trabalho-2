@@ -9,7 +9,14 @@ public class Producao {
 		simboloNaoTerminal = _simboloNaoTerminal;
 	}
 	
-	public Producao(String _simboloTerminal){ ????
+	public Producao(String _simboloTerminal){ 
 		simboloTerminal = _simboloTerminal;
+		simboloNaoTerminal = null;
+	}
+	
+	//FUNCOES
+	
+	public String toString() {
+		return simboloTerminal + (simboloNaoTerminal != null ? simboloNaoTerminal : "");
 	}
 }

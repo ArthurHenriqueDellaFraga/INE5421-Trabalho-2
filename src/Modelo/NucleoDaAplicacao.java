@@ -1,12 +1,12 @@
 package Modelo;
 
-import Modelo.Servico.Determinizador;
+import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 import Persistencia.ContextoDaAplicacao;
+import Persistencia.Artefato;
 
 public class NucleoDaAplicacao {
-	private static NucleoDaAplicacao INSTANCIA;
-	
-	private final ContextoDaAplicacao CONTEXTO_DA_APLICACAO = ContextoDaAplicacao.invocarInstancia();
+	private static NucleoDaAplicacao INSTANCIA;	
+	private static final ContextoDaAplicacao CONTEXTO_DA_APLICACAO = ContextoDaAplicacao.invocarInstancia();
 	
 	private final Determinizador DETERMINIZADOR = new Determinizador();
 	
@@ -17,24 +17,14 @@ public class NucleoDaAplicacao {
 		if(INSTANCIA == null){
 			INSTANCIA = new NucleoDaAplicacao();
 		}
-		
+
 		return INSTANCIA;
 	}
 	
 	//PERSISTENCIA
 	
-	public void persistir(RepresentaLinguagemRegular estrutura){
-		if(estrutura instanceof AutomatoFinito){
-			CONTEXTO_DA_APLICACAO.persistir((AutomatoFinito) estrutura);
-		}
-		
-		if(estrutura instanceof GramaticaRegular){
-			CONTEXTO_DA_APLICACAO.persistir((GramaticaRegular) estrutura);
-		}
-		
-		if(estrutura instanceof ExpressaoRegular){
-			CONTEXTO_DA_APLICACAO.persistir((ExpressaoRegular) estrutura);
-		}
+	public void persistir(Artefato persistente){
+		CONTEXTO_DA_APLICACAO.persistir(persistente);
 	}
 	
 	//FUNCOES 
@@ -44,4 +34,6 @@ public class NucleoDaAplicacao {
 				DETERMINIZADOR.determinizar(automato)
 		);
 	}
+	
+	
 }

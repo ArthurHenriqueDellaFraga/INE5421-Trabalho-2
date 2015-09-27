@@ -25,6 +25,6 @@ public class Transicao {
 	}
 	
 	public String toString(){
-		return ESTADO + SIMBOLO;
+		return ESTADO + "-" + SIMBOLO;
 	}
 }

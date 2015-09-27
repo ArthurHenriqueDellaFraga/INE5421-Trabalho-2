@@ -1,22 +1,14 @@
 package Persistencia;
 
+import java.util.HashMap;
 import java.util.HashSet;
-
-import Modelo.AutomatoFinito;
-import Modelo.ExpressaoRegular;
-import Modelo.GramaticaRegular;
-
 public class ContextoDaAplicacao {
 	private static ContextoDaAplicacao INSTANCIA;
 	
-	private final HashSet<AutomatoFinito> CONJUNTO_DE_AUTOMATOS;
-	private final HashSet<GramaticaRegular> CONJUNTO_DE_GRAMATICAS;
-	private final HashSet<ExpressaoRegular> CONJUNTO_DE_EXPRESSOES;
+	private final HashMap<Class, HashSet<Artefato>> CONTEXTO;
 	
 	private ContextoDaAplicacao(){
-		CONJUNTO_DE_AUTOMATOS = new HashSet<AutomatoFinito>();
-		CONJUNTO_DE_GRAMATICAS = new HashSet<GramaticaRegular>();
-		CONJUNTO_DE_EXPRESSOES = new HashSet<ExpressaoRegular>();
+		CONTEXTO = new HashMap<Class, HashSet<Artefato>>();
 	}
 	
 	public static ContextoDaAplicacao invocarInstancia(){
@@ -29,31 +21,24 @@ public class ContextoDaAplicacao {
 	
 	//ACESSO
 	
-	public HashSet<AutomatoFinito> getConjuntoDeAutomatos(){
-		return CONJUNTO_DE_AUTOMATOS;
-	}
-
-	public HashSet<GramaticaRegular> getConjuntoDeGramaticas(){
-		return CONJUNTO_DE_GRAMATICAS;
-	}
-
-	public HashSet<ExpressaoRegular> getConjuntoDeExpressoes(){
-		return CONJUNTO_DE_EXPRESSOES;
+	public <T> HashSet<T> getConjuntoDeArtefatos(Class<T> clazz){
+		HashSet<T> conjuntoDeArtefatos = new HashSet<T>();
+		
+		if(CONTEXTO.containsKey(clazz)){
+			conjuntoDeArtefatos.addAll((HashSet<T>) CONTEXTO.get(clazz));
+		}
+		
+		return conjuntoDeArtefatos;
 	}
 	
 	//FUNCOES
-		
-	public void persistir(AutomatoFinito automato){
-		CONJUNTO_DE_AUTOMATOS.add(automato);		
-	}
-
-	public void persistir(GramaticaRegular gramatica){
-		CONJUNTO_DE_GRAMATICAS.add(gramatica);		
-	}
 	
-	public void persistir(ExpressaoRegular expressao){
-		CONJUNTO_DE_EXPRESSOES.add(expressao);		
+	public void persistir(Artefato artefato){
+		if(CONTEXTO.containsKey(artefato.getClass())){
+			CONTEXTO.get(artefato.getClass()).add(artefato);
+		}
+		else{
+			CONTEXTO.put(artefato.getClass(), new HashSet<Artefato>(){{ add(artefato); }});
+		}
 	}
-	
-	
 }
