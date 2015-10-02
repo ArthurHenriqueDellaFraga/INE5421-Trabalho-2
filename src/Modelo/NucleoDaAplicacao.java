@@ -1,6 +1,7 @@
 package Modelo;
 
 import Modelo.EstruturaFormal.AutomatoFinito;
+import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 import Modelo.EstruturaFormal.ExpressaoRegular;
 import Modelo.EstruturaFormal.GramaticaRegular;
@@ -35,6 +36,13 @@ public class NucleoDaAplicacao {
 	}
 	
 	//FUNCOES 
+	
+	public void iniciar(){
+		persistir(AutomatoFinitoNaoDeterministico.gerarExemplar());
+		persistir(AutomatoFinitoDeterministico.gerarExemplar());
+		persistir(GramaticaRegular.gerarExemplar());
+		persistir(ExpressaoRegular.gerarExemplar());
+	}
 	
 	public void gerarAutomatoFinito(GramaticaRegular gramatica) {
 		CONTEXTO_DA_APLICACAO.persistir(

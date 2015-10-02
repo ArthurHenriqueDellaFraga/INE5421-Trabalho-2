@@ -34,11 +34,11 @@ public class ContextoDaAplicacao {
 	//FUNCOES
 	
 	public void persistir(Artefato artefato){
-		if(CONTEXTO.containsKey(artefato.getClass())){
-			CONTEXTO.get(artefato.getClass()).add(artefato);
+		if(CONTEXTO.containsKey(artefato.getTipo())){
+			CONTEXTO.get(artefato.getTipo()).add(artefato);
 		}
 		else{
-			CONTEXTO.put(artefato.getClass(), new HashSet<Artefato>(){{ add(artefato); }});
+			CONTEXTO.put(artefato.getTipo(), new HashSet<Artefato>(){{ add(artefato); }});
 		}
 	}
 }

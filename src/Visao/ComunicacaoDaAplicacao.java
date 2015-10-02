@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Comum.Excecao.OperacaoCanceladaException;
+import Modelo.EstruturaFormal.AutomatoFinito;
+import Persistencia.Artefato;
 
 public class ComunicacaoDaAplicacao extends VisaoAbstrato {
 	private static ComunicacaoDaAplicacao INSTANCIA;
@@ -45,6 +47,10 @@ public class ComunicacaoDaAplicacao extends VisaoAbstrato {
 		}
 			
 		return null;
+	}
+
+	public void apresentarArtefato(Artefato artefato) {
+		apresentarMensagemDeInformacao(artefato.apresentacao(), artefato.IDENTIFICADOR);
 	}
 	
 }

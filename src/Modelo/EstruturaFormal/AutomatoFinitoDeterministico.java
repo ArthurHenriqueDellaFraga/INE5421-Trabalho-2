@@ -23,7 +23,7 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 	
 	public static AutomatoFinitoDeterministico gerarExemplar() {
 		return new AutomatoFinitoDeterministico(
-			"AutomatoFinitoNaoDeterministico-Exemplo",
+			"AutomatoFinitoDeterministico-Exemplo",
 			new HashSet<String>() {{	
 				add("S"); 
 				add("A");

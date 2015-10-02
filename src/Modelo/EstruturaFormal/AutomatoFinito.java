@@ -59,6 +59,10 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		return (getConjuntoDeEstadosDestino(transicao).contains(estado) || estado == null);
 	}
 	
+	public Class getTipo(){
+		return AutomatoFinito.class;
+	}
+	
 	//FUNCOES
 
 	public HashSet<String> calcularConjuntoDeEstadosAscendentes(String _estado){
@@ -93,7 +97,12 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 	//OUTROS
 	
 	public String apresentacao(){
-		return tabelaDeTransicao.toString();
+		return
+			"Conjunto De Estados: \n" + conjuntoDeEstados.toString() + "\n\n" +
+			"Alfabeto: \n" + alfabeto.toString() + "\n\n" +
+			"Tabela De Transicao: \n" + tabelaDeTransicao.toString() + "\n\n" +
+			"Estado Inicial: \n" + estadoInicial + "\n\n" +
+			"Conjunto De Estados Finais: \n" + conjuntoDeEstadosFinais.toString();
 	}
 
 

@@ -8,13 +8,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-
 import Comum.Primitiva.Producao;
-import Modelo.NucleoDaAplicacao;
 import Modelo.EstruturaFormal.GramaticaRegular;
 import Visao.ComunicacaoDaAplicacao;
-import Visao.InterfaceDaAplicacao;
 
 public class ImportadorDeGramaticaRegular {
 	private static final GerenteDaAplicacao GERENTE_DA_APLICACAO = GerenteDaAplicacao.invocarInstancia();

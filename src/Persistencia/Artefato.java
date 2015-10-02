@@ -15,6 +15,8 @@ public abstract class Artefato{
 	
 	public abstract String apresentacao();
 	
+	public abstract Class getTipo();
+	
 	//OUTROS
 
 	public String toString(){

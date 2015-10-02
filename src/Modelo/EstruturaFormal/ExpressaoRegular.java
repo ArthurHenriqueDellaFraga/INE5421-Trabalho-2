@@ -22,12 +22,17 @@ public class ExpressaoRegular extends Artefato implements EstruturaFormal, Repre
 		);
 	}
 	
-	//FUNCOES
+	//ACESSO
+	
+	public Class getTipo(){
+		return ExpressaoRegular.class;
+	}
 	
 	//OUTROS
 	
 	public String apresentacao() {
-		return SENTENCA.toString();
+		return 
+			"Sentenca: \n" + SENTENCA.toString();
 	}
 
 }

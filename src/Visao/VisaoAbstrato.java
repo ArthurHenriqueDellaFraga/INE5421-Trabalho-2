@@ -47,4 +47,14 @@ public abstract class VisaoAbstrato {
 		
 		return retorno;
 	}
+	
+	public <T> T selecionarDaLista(Class<T> clazz, String mensagem, String titulo, Object[] lista){
+		T retorno = (T) JOptionPane.showInputDialog(null, mensagem, titulo, 2, null, lista, null);
+		
+		if(retorno == null){
+			throw new OperacaoCanceladaException();
+		}
+		
+		return retorno;
+	}
 }

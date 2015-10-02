@@ -95,11 +95,19 @@ public class GramaticaRegular extends Artefato implements EstruturaFormal, Repre
 		return simboloInicial;
 	}
 
-	//FUNCOES
+	//ACESSO
+	
+	public Class getTipo(){
+		return GramaticaRegular.class;
+	}
 	
 	//OUTROS
 	
 	public String apresentacao(){
-		return regrasDeProducao.toString();
+		return 
+			"Conjunto De Simbolos Nao Terminais: \n" + conjuntoDeSimbolosNaoTerminais.toString() + "\n\n" +
+			"Conjunto De Simbolos Terminais: \n" + conjuntoDeSimbolosTerminais.toString() + "\n\n" +
+			"Regras De Producao: \n" + regrasDeProducao.toString() + "\n\n" + 
+			"Simbolo Inicial: \n" + simboloInicial;
 	}
 }

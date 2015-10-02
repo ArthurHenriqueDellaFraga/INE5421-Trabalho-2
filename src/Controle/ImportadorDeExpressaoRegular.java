@@ -7,11 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Stack;
 
-import org.omg.CORBA._IDLTypeStub;
-
 import Comum.Enumeracao.OperacaoDeExpressaoRegular;
 import Modelo.EstruturaFormal.ExpressaoRegular;
-import Persistencia.Artefato;
 import Visao.ComunicacaoDaAplicacao;
 
 public class ImportadorDeExpressaoRegular {
@@ -68,9 +65,9 @@ public class ImportadorDeExpressaoRegular {
 				}
 			} while (linha != null);
 
-			char[] expressao = validarER(texto);
+			char[] expressao = validarImportacao(texto);
 			if (expressao != null) {
-				GERENTE_DA_APLICACAO.persistir(comporER(_identificador, expressao));
+				GERENTE_DA_APLICACAO.persistir(comporExpressaoRegular(_identificador, expressao));
 				COMUNICACAO_DA_APLICACAO.apresentarMensagemDeInformacao("SUCESSO: Importacao de '"
 						+ _identificador + "' realizada.", COMPETENCIA);
 				return;
@@ -78,7 +75,7 @@ public class ImportadorDeExpressaoRegular {
 		}
 	}
 
-	private char[] validarER(String texto) {
+	private char[] validarImportacao(String texto) {
 		String validacaoErros = "ERROS: ";
 		Stack<String> parenteses = new Stack<String>();
 		char[] expressao = new char[texto.length()];
@@ -144,7 +141,7 @@ public class ImportadorDeExpressaoRegular {
 		}
 	}
 
-	private ExpressaoRegular comporER(String _identificador, char[] expressao) {
+	private ExpressaoRegular comporExpressaoRegular(String _identificador, char[] expressao) {
 		String _sentenca = "";
 		for (int i = 0; i < expressao.length; i++) {
 			String simbolo = "" + expressao[i];

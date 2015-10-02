@@ -15,6 +15,7 @@ public class GerenteDaAplicacao{
 	private static final InterfaceDaAplicacao INTERFACE_DA_APLICACAO = InterfaceDaAplicacao.invocarInstancia();
 	
 	private final ImportadorDeGramaticaRegular IMPORTADOR_DE_GRAMATICA = new ImportadorDeGramaticaRegular();
+	private final ImportadorDeExpressaoRegular IMPORTADOR_DE_EXPRESSAO = new ImportadorDeExpressaoRegular();
 	
 	private GerenteDaAplicacao(){
 		
@@ -32,6 +33,7 @@ public class GerenteDaAplicacao{
 
 	public void iniciar(){		
 		try{
+			NUCLEO_DA_APLICACAO.iniciar();
 			INTERFACE_DA_APLICACAO.iniciar();
 		}
 		catch(OperacaoCanceladaException e){
@@ -56,7 +58,8 @@ public class GerenteDaAplicacao{
 	}
 	
 	public void gerarExpressaoRegular(AutomatoFinito automato) {
-		NUCLEO_DA_APLICACAO.gerarExpressaoRegular(automato);
+		//NUCLEO_DA_APLICACAO.gerarExpressaoRegular(automato);
+		INTERFACE_DA_APLICACAO.apresentarMensagemDeErro("Funcionalidade Não Implementada", "Converter Automato Finito para Expressao Regular");
 	}
 	
 	public void determinizar(AutomatoFinito automato){
@@ -71,5 +74,15 @@ public class GerenteDaAplicacao{
 	
 	public void importarGramaticaRegular(){
 		IMPORTADOR_DE_GRAMATICA.importarGramaticaRegular();
+	}
+
+	public void importarExpressaoRegular() {
+		IMPORTADOR_DE_EXPRESSAO.importarExpressaoRegular();
+		
+	}
+
+	public void importarAutomatoFinito() {
+		INTERFACE_DA_APLICACAO.apresentarMensagemDeErro("Funcionalidade Não Implementada", "Importar Automato Finito");
+		
 	}
 }
