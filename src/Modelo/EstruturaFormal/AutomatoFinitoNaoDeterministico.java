@@ -68,25 +68,55 @@ public class AutomatoFinitoNaoDeterministico extends AutomatoFinito{
 		return new HashMap<Transicao, HashSet<String>>(tabelaDeTransicao);
 	}
 	
-	public boolean contem(Transicao transicao, String estado){		
-		if(tabelaDeTransicao.containsKey(transicao) && (tabelaDeTransicao.get(transicao).contains(estado) || estado == null)){
-			return true;
-		}
-		return false;
+	public HashSet<String> getConjuntoDeEstadosDestino(Transicao transicao){
+		return new HashSet<String>(){{
+			HashSet<String> conjuntoDeEstadosDestino = tabelaDeTransicao.get(transicao);
+			
+			if(conjuntoDeEstadosDestino != null){
+				addAll(conjuntoDeEstadosDestino);
+			}
+			
+			assert size() > 0;
+		}};
 	}
 
-	protected boolean inserir(Transicao transicao, String estado) {
-		if(!tabelaDeTransicao.containsKey(transicao)){
-			tabelaDeTransicao.put(transicao, new HashSet<String>(){{ add(estado); }});
-			return true;
-		}
-		
-		if(!estado.equals(ESTADO_DE_REJEICAO)){
-			tabelaDeTransicao.get(transicao).add(estado);
-			return true;
-		}
+	public static void completar(AutomatoFinitoNaoDeterministico automato) {
+		for(String estado : automato.getConjuntoDeEstados()){
+			boolean temTransicoes = false;
 			
-		return false;
+			for(String simbolo : automato.alfabeto){
+				Transicao transicao = new Transicao(estado, simbolo);
+				
+				if(!automato.getConjuntoDeEstadosDestino(transicao).isEmpty()){
+					temTransicoes = true;
+					break;
+				}
+			}
+			
+			if(!temTransicoes){
+				if(automato.conjuntoDeEstados.remove(estado)){
+					String estadoSubstudo;
+					
+					if(automato.conjuntoDeEstadosFinais.remove(estado)){
+						estadoSubstudo = ESTADO_DE_ACEITACAO;
+						automato.conjuntoDeEstadosFinais.add(estadoSubstudo);
+					}
+					else{
+						estadoSubstudo = ESTADO_DE_REJEICAO;
+					}
+					
+					automato.conjuntoDeEstados.add(estadoSubstudo);
+					
+					for(Transicao transicao : automato.getTabelaDeTransicao().keySet()){
+						HashSet<String> conjuntoDeEstadosDestino = automato.tabelaDeTransicao.get(transicao);
+						
+						if(conjuntoDeEstadosDestino.remove(estado)){
+							conjuntoDeEstadosDestino.add(estadoSubstudo);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	//FUNCOES

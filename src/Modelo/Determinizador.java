@@ -26,46 +26,32 @@ public class Determinizador {
 		HashMap<Transicao, HashSet<String>> _tabelaDeTransicao = automato.getTabelaDeTransicao();
 		HashSet<String> _conjuntoDeEstadosFinais = automato.getConjuntoDeEstadosFinais();
 		
+		Transicao transicaoEpsilon = null;
 		for (String estadoOrigem : automato.getConjuntoDeEstados()){
-			Transicao transicaoEpsilon = new Transicao(estadoOrigem, ConceitoDeLinguagensFormais.SIMBOLO_EPSILON);
-
-			while (_tabelaDeTransicao.containsKey(transicaoEpsilon)){				
-				for (String estadoDestino : new HashSet<String>(_tabelaDeTransicao.get(transicaoEpsilon))){
+			transicaoEpsilon = new Transicao(estadoOrigem, ConceitoDeLinguagensFormais.SIMBOLO_EPSILON);
+			
+			for (String estadoDestino : automato.getConjuntoDeEstadosDestino(transicaoEpsilon)){
+				for (String simbolo : automato.getAlfabeto()){
+					Transicao transicao = new Transicao(estadoOrigem, simbolo);
+					Transicao transicaoAuxiliar = new Transicao(estadoDestino, simbolo);
 					
-					if (!estadoDestino.equals(ConceitoDeLinguagensFormais.ESTADO_DE_REJEICAO)){
-						for (String simbolo : automato.getAlfabeto()){
-							
-							Transicao transicao1 = new Transicao(estadoOrigem, simbolo);
-							Transicao transicao2 = new Transicao(estadoDestino, simbolo);
-							
-							if (_tabelaDeTransicao.containsKey(transicao2)){
-								HashSet<String> conjuntoDeEstadosDestino = new HashSet<String>(_tabelaDeTransicao.get(transicao2));
-					
-								if(_tabelaDeTransicao.containsKey(transicao1)){
-									conjuntoDeEstadosDestino.addAll(_tabelaDeTransicao.get(transicao1));
-								}
-						
-								conjuntoDeEstadosDestino.remove(ConceitoDeLinguagensFormais.ESTADO_DE_REJEICAO);
-								if (conjuntoDeEstadosDestino.size() == 0){
-									_tabelaDeTransicao.remove(transicao1);
-								}
-								else{
-									_tabelaDeTransicao.put(transicao1, conjuntoDeEstadosDestino);
-								}
-								
-								if(_conjuntoDeEstadosFinais.contains(estadoDestino)){
-									_conjuntoDeEstadosFinais.add(estadoOrigem);
-								}
-							}
-						}
+					HashSet<String> conjuntoDeEstadosDestino = new HashSet<String>(){{
+						addAll(automato.getConjuntoDeEstadosDestino(transicao));
+						addAll(automato.getConjuntoDeEstadosDestino(transicaoAuxiliar));
+					}};
+			
+					if (conjuntoDeEstadosDestino.size() > 0){
+						_tabelaDeTransicao.put(transicao, conjuntoDeEstadosDestino);
 					}
-					_tabelaDeTransicao.get(transicaoEpsilon).remove(estadoDestino);
+					
 				}
-				if (_tabelaDeTransicao.get(transicaoEpsilon).size() == 0) {
-					_tabelaDeTransicao.remove(transicaoEpsilon);
+				
+				if(_conjuntoDeEstadosFinais.contains(estadoDestino)){
+					_conjuntoDeEstadosFinais.add(estadoOrigem);
 				}
 			}
 		}
+		_tabelaDeTransicao.remove(transicaoEpsilon);
 		
 		HashSet<String> _alfabeto = automato.getAlfabeto();
 		_alfabeto.remove(ConceitoDeLinguagensFormais.SIMBOLO_EPSILON);
@@ -86,7 +72,7 @@ public class Determinizador {
 		
 		HashSet<String> conjuntoDeEstadosAlcancaveis = new HashSet<String>(){{ add(_estadoInicial); }};
 		
-		HashSet<String> conjuntoDeEstadosJaDeterminizado = new HashSet<String>(){{ add(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO); add(ConceitoDeLinguagensFormais.ESTADO_DE_REJEICAO); }};
+		HashSet<String> conjuntoDeEstadosJaDeterminizado = new HashSet<String>(){{ add(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO); }};
 		HashSet<String> conjuntoDeEstadosParaDeterminizar = new HashSet<String>(){{ addAll(conjuntoDeEstadosAlcancaveis); removeAll(conjuntoDeEstadosJaDeterminizado); }};
 		
 		while(!conjuntoDeEstadosParaDeterminizar.isEmpty()){
@@ -95,7 +81,10 @@ public class Determinizador {
 					Transicao transicao = new Transicao(estado, simbolo);
 					
 					_tabelaDeTransicao.putAll(calcularTransicao(automato, transicao));
-					conjuntoDeEstadosAlcancaveis.add(_tabelaDeTransicao.get(transicao));
+					if(_tabelaDeTransicao.containsKey(transicao)){
+						conjuntoDeEstadosAlcancaveis.add(_tabelaDeTransicao.get(transicao));
+					}
+					
 				}
 				conjuntoDeEstadosJaDeterminizado.add(estado);
 			}
@@ -103,7 +92,6 @@ public class Determinizador {
 		}
 		
 		conjuntoDeEstadosAlcancaveis.remove(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO);
-		conjuntoDeEstadosAlcancaveis.remove(ConceitoDeLinguagensFormais.ESTADO_DE_REJEICAO);
 		
 		HashSet _conjuntoDeEstadosFinais = new HashSet<String>();
 		
@@ -125,33 +113,37 @@ public class Determinizador {
 		);	
 	}
 	
-	private HashMap<Transicao, String> calcularTransicao(AutomatoFinitoNaoDeterministico automato, Transicao transicao) {
-		HashMap<Transicao, String> _tabelaDetransicao = new HashMap<Transicao, String>();
-		
+	private HashMap<Transicao, String> calcularTransicao(AutomatoFinitoNaoDeterministico automato, Transicao transicao) {		
 		HashSet<String> conjuntoDeEstados = new HashSet<String>();
+		
 		for(String estado : transicao.ESTADO.split(SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)){
-			
-			
 			if(automato.getConjuntoDeEstados().contains(estado)){
 				Transicao transicaoAuxiliar = new Transicao(estado, transicao.SIMBOLO);
 			
-				conjuntoDeEstados.add(
-						gerarNovoEstadoMesclado(automato.getTabelaDeTransicao().get(transicaoAuxiliar))
-				);
+				String novoEstado = gerarNovoEstadoMesclado(automato.getConjuntoDeEstadosDestino(transicaoAuxiliar));
+				if(novoEstado != null){
+					conjuntoDeEstados.add(novoEstado);
+				}
 			}
 		}
 		
-		if(conjuntoDeEstados.size() > 1){
-			conjuntoDeEstados.remove(ConceitoDeLinguagensFormais.ESTADO_DE_REJEICAO);
-		}
-		return new HashMap<Transicao, String>(){{ put(transicao, gerarNovoEstadoMesclado(conjuntoDeEstados)); }};
+		return new HashMap<Transicao, String>(){{ 
+			String novoEstado = gerarNovoEstadoMesclado(conjuntoDeEstados);
+			if(novoEstado != null){
+				put(transicao, novoEstado);
+			}
+		}};
 	}
 
 	private String gerarNovoEstadoMesclado(HashSet<String> conjuntoDeEstados){
-		return conjuntoDeEstados.toString()
-				.replaceAll(",", SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)
-				.replaceAll(" ", "")
-				.replaceAll("[\\[\\]]", "");
+		if(!conjuntoDeEstados.isEmpty()){
+			return conjuntoDeEstados.toString()
+					.replaceAll(",", SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)
+					.replaceAll(" ", "")
+					.replaceAll("[\\[\\]]", "");
+		}
+		
+		return null;
 	}
 
 }

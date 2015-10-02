@@ -10,9 +10,9 @@ import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 import Modelo.EstruturaFormal.GramaticaRegular;
 
-public class GeradorDeGramaticaRegular {
+public class ConversorDeAutomatoParaGramatica {
 	
-	public GeradorDeGramaticaRegular() {
+	public ConversorDeAutomatoParaGramatica() {
 		
 	}
 	
@@ -27,16 +27,12 @@ public class GeradorDeGramaticaRegular {
 				
 				HashSet<Producao> conjuntoDeProducoes = new HashSet<Producao>();
 				
-				HashSet<String> conjuntoDeEstadosDestino = new HashSet<String>(){{
-					if(automato instanceof AutomatoFinitoDeterministico){ 
-						add((AutomatoFinitoDeterministico) automato).getTabelaDeTransicao().get(transicao));
-					} else{
-						for(String estadoDestino : ((AutomatoFinitoNaoDeterministico) automato).getTabelaDeTransicao().get(transicao)){
-							addAll(new Producao(transicao.SIMBOLO, estado));
-						}
-					}
-				}};
-				
+				for(String estadoDestino : automato.getConjuntoDeEstadosDestino(transicao)){
+					conjuntoDeProducoes.add(new Producao(
+							simbolo,
+							estadoDestino.equals(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO) ?	null : estadoDestino
+					));
+				}
 							
 				if(_regrasDeProducao.containsKey(estado)) {
 					conjuntoDeProducoes.addAll(_regrasDeProducao.get(estado));
@@ -46,7 +42,7 @@ public class GeradorDeGramaticaRegular {
 		}
 		
 		return new GramaticaRegular(
-				"Gramatica_" + automato.IDENTIFICADOR,
+				"AF_" + automato.IDENTIFICADOR,
 				automato.getConjuntoDeEstados(),
 				automato.getAlfabeto(),
 				_regrasDeProducao,

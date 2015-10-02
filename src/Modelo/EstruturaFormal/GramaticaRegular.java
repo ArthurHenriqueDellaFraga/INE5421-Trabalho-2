@@ -18,8 +18,6 @@ public class GramaticaRegular extends Artefato implements EstruturaFormal, Repre
 		conjuntoDeSimbolosTerminais = _conjuntoDeSimbolosTerminais;
 		regrasDeProducao = _regrasDeProducao;
 		simboloInicial = _simboloInicial;
-		
-		completar(this);
 	}
 	
 	private GramaticaRegular(GramaticaRegular gramatica){
@@ -37,22 +35,29 @@ public class GramaticaRegular extends Artefato implements EstruturaFormal, Repre
 					add("S");
 					add("A");
 					add("B");
+					add("C");
 				}}, 
 				new HashSet<String>(){{
 					add("a");
 					add("b");
+					add("c");
+					add(SIMBOLO_EPSILON);
 				}},
 				new HashMap<String, HashSet<Producao>>(){{
 					put("S", new HashSet<Producao>(){{ 
 						add(new Producao("b", "A"));
 						add(new Producao("b", "B"));
+						add(new Producao("c", "C"));
+						
 					}});
 					put("A", new HashSet<Producao>(){{ 
-						add(new Producao("a"));
 						add(new Producao("a", "B"));
+						add(new Producao("a", null));
+						add(new Producao(SIMBOLO_EPSILON, "C"));
+						
 					}});
 					put("B", new HashSet<Producao>(){{ 
-						add(new Producao("b"));
+						add(new Producao("b", null));
 						add(new Producao("b", "B"));
 					}});
 				}},
@@ -70,8 +75,20 @@ public class GramaticaRegular extends Artefato implements EstruturaFormal, Repre
 		return new HashSet<String>(conjuntoDeSimbolosTerminais);
 	}
 
-	public HashMap<String, HashSet<Producao>> getRegrasDeProducao() {
-		return new HashMap<String, HashSet<Producao>>(regrasDeProducao);
+//	public HashMap<String, HashSet<Producao>> getRegrasDeProducao() {
+//		return new HashMap<String, HashSet<Producao>>(regrasDeProducao);
+//	}
+	
+	public HashSet<Producao> getConjuntoDeProducoes(String simboloNaoTerminal){
+		return new HashSet<Producao>(){{
+			HashSet<Producao> conjuntoDeProducoes = regrasDeProducao.get(simboloNaoTerminal);
+			
+			if(conjuntoDeProducoes != null){
+				addAll(conjuntoDeProducoes);
+			}
+			
+			assert size() > 0;
+		}};
 	}
 
 	public String getSimboloInicial() {
@@ -79,14 +96,6 @@ public class GramaticaRegular extends Artefato implements EstruturaFormal, Repre
 	}
 
 	//FUNCOES
-	
-	protected static void completar(GramaticaRegular gramatica){
-		for(String SimboloNaoTerminal : gramatica.conjuntoDeSimbolosNaoTerminais){
-			if(!gramatica.regrasDeProducao.containsKey(SimboloNaoTerminal)){
-				gramatica.regrasDeProducao.put(SimboloNaoTerminal, new HashSet<Producao>());
-			}
-		}
-	}
 	
 	//OUTROS
 	

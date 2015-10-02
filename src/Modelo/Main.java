@@ -1,32 +1,41 @@
 package Modelo;
 
-import java.util.LinkedHashSet;
-
 import Controle.GerenteDaAplicacao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
+import Modelo.EstruturaFormal.ExpressaoRegular;
 import Modelo.EstruturaFormal.GramaticaRegular;
+import Persistencia.ContextoDaAplicacao;
 
 public class Main {
 	
 	public static void main(String[] args){		
 		GerenteDaAplicacao aplicacao = GerenteDaAplicacao.invocarInstancia();
-		//aplicacao.determinizar(AutomatoFinitoNaoDeterministico.gerarExemplar());
-		
+
+		aplicacao.importarGramaticaRegular();
+		for(GramaticaRegular gramatica : ContextoDaAplicacao.invocarInstancia().getConjuntoDeArtefatos(GramaticaRegular.class)){
+			System.out.println(gramatica.apresentacao());
+		}
+		//System.out.println(new Nodo<String>("a") + "");
 		//aplicacao.iniciar();
-		testar();
-		
+		//testar();
 		
 	}
 	
 	//TESTES
 	
 	private static void testar(){
-		AutomatoFinitoNaoDeterministico a = new GeradorDeAutomatoFinito().gerarAutomatoFinito(GramaticaRegular.gerarExemplar());
-		AutomatoFinitoDeterministico b = new Determinizador().determinizar(a);
+		GramaticaRegular gr = GramaticaRegular.gerarExemplar();
+		System.out.println(gr.apresentacao());
 		
-		System.out.println(new GeradorDeGramaticaRegular().gerarGramaticaRegular(a).apresentacao());
-		System.out.println(new GeradorDeGramaticaRegular().gerarGramaticaRegular(b).apresentacao());
+		AutomatoFinitoNaoDeterministico a = new ConversorDeGramaticaParaAutomato().gerarAutomatoFinito(gr);
+		System.out.println(a.apresentacao());
+		
+		AutomatoFinitoDeterministico b = new Determinizador().determinizar(a);
+		System.out.println(b.apresentacao() + "\n");
+		
+		System.out.println(new ConversorDeExpressaoParaAutomato().gerarAutomatoFinito(ExpressaoRegular.gerarExemplar()).apresentacao());
+		
 			
 	}
 }

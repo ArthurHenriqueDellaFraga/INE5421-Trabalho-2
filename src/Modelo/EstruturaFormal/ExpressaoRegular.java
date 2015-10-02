@@ -3,17 +3,31 @@ package Modelo.EstruturaFormal;
 import Persistencia.Artefato;
 
 public class ExpressaoRegular extends Artefato implements EstruturaFormal, RepresentaLinguagemRegular{
-	protected String sentenca;
+	public final String SENTENCA;
 
 	public ExpressaoRegular(String _identificador, String _sentenca) {
 		super(_identificador);
+		SENTENCA = _sentenca;
 	}
 	
 	private ExpressaoRegular(ExpressaoRegular expressao) {
 		super((Artefato) expressao);
-		sentenca = expressao.sentenca;
+		SENTENCA = expressao.SENTENCA;
+	}
+	
+	public static ExpressaoRegular gerarExemplar(){
+		return new ExpressaoRegular(
+				"ExpressaoRegular-exemplo",
+				"a.(b|c)*"
+		);
 	}
 	
 	//FUNCOES
+	
+	//OUTROS
+	
+	public String apresentacao() {
+		return SENTENCA.toString();
+	}
 
 }

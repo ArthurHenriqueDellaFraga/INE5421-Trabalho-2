@@ -1,6 +1,5 @@
 package Modelo.EstruturaFormal;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -45,6 +44,8 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 	}
 
 	public abstract HashMap<Transicao, ?> getTabelaDeTransicao();
+	
+	public abstract HashSet<String> getConjuntoDeEstadosDestino(Transicao transicao);
 
 	public String getEstadoInicial() {
 		return new String(estadoInicial);
@@ -53,20 +54,12 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 	public HashSet<String> getConjuntoDeEstadosFinais() {
 		return new HashSet<String>(conjuntoDeEstadosFinais);
 	}
-	
-	protected abstract boolean inserir(Transicao transicao, String estado);
 
-	public abstract boolean contem(Transicao transicao, String estado);
+	public boolean contem(Transicao transicao, String estado){		
+		return (getConjuntoDeEstadosDestino(transicao).contains(estado) || estado == null);
+	}
 	
 	//FUNCOES
-	
-	protected static void completar(AutomatoFinito automato){
-		for (String estado : automato.conjuntoDeEstados){
-			for (String simbolo : automato.alfabeto){
-				automato.inserir(new Transicao(estado, simbolo), ESTADO_DE_REJEICAO);
-			}
-		}
-	}
 
 	public HashSet<String> calcularConjuntoDeEstadosAscendentes(String _estado){
 		HashSet<String> conjuntoDeEstadosAscendente = new HashSet<String>();

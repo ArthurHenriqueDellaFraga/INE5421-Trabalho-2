@@ -1,8 +1,11 @@
 package Visao;
 
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -53,6 +56,36 @@ public class InterfaceDaAplicacao extends VisaoAbstrato{
 				
 		FRAME_FAMILIAR.add(panel);
 		FRAME_FAMILIAR.setVisible(true);
+	}
+	
+	private JPanel gerarPaginaInserir() {
+		JPanel pagina = new JPanel();
+		JLabel label = new JLabel("Insira uma estrutura a partir de um arquivo:");
+		pagina.add(label);
+			
+		JButton acao1 = new JButton("Expressao Regular");
+		acao1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				acaoCorrente = "Inserir";
+				objetoDominioCorrente = "Expressao Regular";
+				
+				controle.importarExpressaoRegular();
+			}
+		});
+		pagina.add(acao1);
+
+		JButton acao2 = new JButton("Gramatica Regular");
+		acao2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				acaoCorrente = "Inserir";
+				objetoDominioCorrente = "Gramatica Regular";
+				
+				controle.importarGramaticaRegular();
+			}
+		});
+		pagina.add(acao2);
+
+		return pagina;
 	}
 	
 }
