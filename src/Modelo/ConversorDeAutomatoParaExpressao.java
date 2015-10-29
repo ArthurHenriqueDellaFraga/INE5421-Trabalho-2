@@ -16,5 +16,6 @@ public class ConversorDeAutomatoParaExpressao {
 		System.out.println("METODO NÃO IMPLEMENTADO");
 		return null;
 	}
+
 	
 }
