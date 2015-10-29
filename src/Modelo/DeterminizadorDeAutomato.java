@@ -7,10 +7,10 @@ import Comum.Primitiva.Transicao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 
-public class Determinizador {
+public class DeterminizadorDeAutomato  extends ManipuladorDeAutomato{
 	private static final String SIMBOLO_DE_CONCATENACAO_DE_ESTADOS = ":";
 
-	public Determinizador(){
+	public DeterminizadorDeAutomato(){
 		
 	}
 	

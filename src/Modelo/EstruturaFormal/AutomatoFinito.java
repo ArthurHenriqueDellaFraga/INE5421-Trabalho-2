@@ -55,7 +55,7 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		return new HashSet<String>(conjuntoDeEstadosFinais);
 	}
 
-	public boolean contem(Transicao transicao, String estado){		
+	public boolean contemTransicao(Transicao transicao, String estado){		
 		return (getConjuntoDeEstadosDestino(transicao).contains(estado) || estado == null);
 	}
 	
@@ -71,7 +71,7 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		for(String estadoAtual : conjuntoDeEstados){				
 			for(String simboloAtual : alfabeto){
 				
-				if(contem(new Transicao(estadoAtual, simboloAtual), _estado)){
+				if(contemTransicao(new Transicao(estadoAtual, simboloAtual), _estado)){
 					conjuntoDeEstadosAscendente.add(estadoAtual);
 				}
 			}
@@ -79,13 +79,13 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		return conjuntoDeEstadosAscendente;
 	}
 
-	protected HashSet<String> calcularConjuntoDeEstadosDescendentes(String _estado) {
+	public HashSet<String> calcularConjuntoDeEstadosDescendentes(String _estado) {
 		HashSet<String> conjuntoDeEstadosDescendente = new HashSet<>();
 
 		for(String estadoAtual : conjuntoDeEstados){
 			for(String simboloAtual : alfabeto){
 				
-				if(contem(new Transicao(_estado, simboloAtual), estadoAtual)){
+				if(contemTransicao(new Transicao(_estado, simboloAtual), estadoAtual)){
 					conjuntoDeEstadosDescendente.add(estadoAtual);
 				}
 			}
