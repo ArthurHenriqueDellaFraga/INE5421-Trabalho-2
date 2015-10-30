@@ -15,13 +15,44 @@ public abstract class ManipuladorDeAutomato {
 	//FUNCOES
 	
 	public AutomatoFinitoDeterministico removerEstadosInuteis(AutomatoFinitoDeterministico automato){
-		automato = excluirEstadosInalcancaveis(automato);
-//		automato = excluirEstadosInferteis(automato);
-		
+		automato = removerConjuntoDeEstados(automato, definirEstadosInferteis(automato));
+		automato = removerConjuntoDeEstados(automato, definirEstadosInalcancaveis(automato));
+				
 		return automato;
 	}
 	
-	private HashSet<String> calcularEstadosInalcancaveis(AutomatoFinitoDeterministico automato) {
+	private HashSet<String> definirEstadosInferteis(AutomatoFinitoDeterministico automato) {
+		HashSet<String> conjuntoDeEstadosFerteis = new HashSet<String>(){{
+			addAll(automato.getConjuntoDeEstadosFinais());
+		}};
+		
+		HashSet<String> conjuntoDeEstadosVerificados = new HashSet<String>();
+		boolean novosEstadosAlcancados = true;
+
+		while (novosEstadosAlcancados) {
+			int quantidadeEstadosAlcancados = conjuntoDeEstadosFerteis.size();
+
+			HashSet<String> conjuntoDeEstadosParaVerificar = new HashSet<String>(){{
+				addAll(conjuntoDeEstadosFerteis);
+				removeAll(conjuntoDeEstadosVerificados);
+			}};
+			
+			for(String estado : conjuntoDeEstadosParaVerificar){
+				conjuntoDeEstadosFerteis.addAll(automato.definirConjuntoDeEstadosAscendentes(estado));
+				conjuntoDeEstadosVerificados.add(estado);
+			}
+			if (conjuntoDeEstadosFerteis.size() == quantidadeEstadosAlcancados) {
+				novosEstadosAlcancados = false;
+			}
+		}
+		
+		return new HashSet<String>(){{
+			addAll(automato.getConjuntoDeEstados());
+			removeAll(conjuntoDeEstadosFerteis);
+		}};
+	}
+	
+	private HashSet<String> definirEstadosInalcancaveis(AutomatoFinitoDeterministico automato) {
 		HashSet<String> conjuntoDeEstadosAlcancaveis = new HashSet<String>(){{
 			add(automato.getEstadoInicial());
 		}};
@@ -38,7 +69,7 @@ public abstract class ManipuladorDeAutomato {
 			}};
 			
 			for(String estado : conjuntoDeEstadosParaVerificar){
-				conjuntoDeEstadosAlcancaveis.addAll(automato.calcularConjuntoDeEstadosDescendentes(estado));
+				conjuntoDeEstadosAlcancaveis.addAll(automato.definirConjuntoDeEstadosDescendentes(estado));
 				conjuntoDeEstadosVerificados.add(estado);
 			}
 			if (conjuntoDeEstadosAlcancaveis.size() == quantidadeEstadosAlcancados) {
@@ -49,19 +80,13 @@ public abstract class ManipuladorDeAutomato {
 		return new HashSet<String>(){{
 			addAll(automato.getConjuntoDeEstados());
 			removeAll(conjuntoDeEstadosAlcancaveis);
-//			remove(GeradorAF.fi);
 		}};
 	}
 	
-	private AutomatoFinitoDeterministico excluirEstadosInalcancaveis(AutomatoFinitoDeterministico automato) {
+	private AutomatoFinitoDeterministico removerConjuntoDeEstados(AutomatoFinitoDeterministico automato, HashSet<String> conjuntoDeEstados){
 		HashMap<Transicao, String> _tabelaDeTransicao = automato.getTabelaDeTransicao();
 		
-		HashSet<String> conjuntoDeEstadosInalcancaveis = new HashSet<String>(){{
-			addAll(calcularEstadosInalcancaveis(automato));
-		}};
-		
-		
-		for(String estado : conjuntoDeEstadosInalcancaveis){
+		for(String estado : conjuntoDeEstados){
 			for(String simbolo : automato.getAlfabeto()){
 				_tabelaDeTransicao.remove(new Transicao(estado, simbolo));
 			}
@@ -71,14 +96,14 @@ public abstract class ManipuladorDeAutomato {
 				automato.IDENTIFICADOR,
 				new HashSet<String>(){{
 					addAll(automato.getConjuntoDeEstados());
-					removeAll(conjuntoDeEstadosInalcancaveis);
+					removeAll(conjuntoDeEstados);
 				}},
 				automato.getAlfabeto(),
 				_tabelaDeTransicao,
 				automato.getEstadoInicial(),
 				new HashSet<String>(){{
 					addAll(automato.getConjuntoDeEstadosFinais());
-					removeAll(conjuntoDeEstadosInalcancaveis);
+					removeAll(conjuntoDeEstados);
 				}}
 		);
 	}

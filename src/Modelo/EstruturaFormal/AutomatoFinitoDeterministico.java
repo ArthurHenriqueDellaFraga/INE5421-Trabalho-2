@@ -54,12 +54,16 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 	
 	public HashSet<String> getConjuntoDeEstadosDestino(Transicao transicao){
 		return new HashSet<String>(){{
-			String estadoDestino = tabelaDeTransicao.get(transicao);
+			String estadoDestino = getEstadoDestino(transicao);
 			
 			if(estadoDestino != null){
 				add(estadoDestino);
 			}
 		}};
+	}
+	
+	public String getEstadoDestino(Transicao transicao){
+		return tabelaDeTransicao.get(transicao);
 	}
 	
 	//FUNCOES

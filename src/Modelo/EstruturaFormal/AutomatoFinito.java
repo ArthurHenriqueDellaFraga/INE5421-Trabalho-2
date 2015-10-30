@@ -65,7 +65,7 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 	
 	//FUNCOES
 
-	public HashSet<String> calcularConjuntoDeEstadosAscendentes(String _estado){
+	public HashSet<String> definirConjuntoDeEstadosAscendentes(String _estado){
 		HashSet<String> conjuntoDeEstadosAscendente = new HashSet<String>();
 			
 		for(String estadoAtual : conjuntoDeEstados){				
@@ -79,7 +79,7 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		return conjuntoDeEstadosAscendente;
 	}
 
-	public HashSet<String> calcularConjuntoDeEstadosDescendentes(String _estado) {
+	public HashSet<String> definirConjuntoDeEstadosDescendentes(String _estado) {
 		HashSet<String> conjuntoDeEstadosDescendente = new HashSet<>();
 
 		for(String estadoAtual : conjuntoDeEstados){
