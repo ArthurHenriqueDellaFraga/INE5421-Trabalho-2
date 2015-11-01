@@ -1,12 +1,11 @@
 package Modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import Comum.Primitiva.Transicao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
-import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
-
 
 public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 	
@@ -16,20 +15,47 @@ public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 	
 	//FUNCOES
 	
-	public AutomatoFinitoDeterministico minimizar(AutomatoFinitoNaoDeterministico automato){
-		DeterminizadorDeAutomato determinizador = new DeterminizadorDeAutomato();
-		
-		return minimizar(
-			determinizador.determinizar(automato)
-		);
-	}
-	
 	public AutomatoFinitoDeterministico minimizar(AutomatoFinitoDeterministico automato){
 		automato = removerEstadosInuteis(automato);
+		ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia = definirClassesDeEquivalencia(automato);
 		
-		definirClassesDeEquivalencia(automato);
+		HashSet<String> _conjuntoDeEstados = new HashSet<String>();
+		HashMap<Transicao, String> _tabelaDeTransicao = new HashMap<Transicao, String>();
+		HashSet<String> _conjuntoDeEstadosFinais = new HashSet<String>();
 		
-		return null;
+		for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
+			for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
+				
+				String estado = classeDeEquivalencia.iterator().next();
+				String _estado = gerarNovoEstadoMesclado(classeDeEquivalencia);
+				
+				_conjuntoDeEstados.add(_estado);
+				
+				for(String simbolo : automato.getAlfabeto()){
+					HashSet<String> _classeDeEquivalencia = identificarClasseDeEquivalencia(
+							automato.getEstadoDestino(new Transicao(estado, simbolo)),
+							listaDeConjuntosDeClassesDeEquivalencia
+					);
+					
+					if(_classeDeEquivalencia != null){
+						_tabelaDeTransicao.put(new Transicao(_estado, simbolo), gerarNovoEstadoMesclado(_classeDeEquivalencia));
+					}
+				}
+				
+				if(automato.getConjuntoDeEstadosFinais().contains(estado)){
+					_conjuntoDeEstadosFinais.add(_estado);
+				}
+			}
+		}
+		
+		return new AutomatoFinitoDeterministico(
+				automato.IDENTIFICADOR + "_MIN",
+				_conjuntoDeEstados,
+				automato.getAlfabeto(),
+				_tabelaDeTransicao,
+				automato.getEstadoInicial(),
+				_conjuntoDeEstadosFinais
+		);
 	}
 
 	private ArrayList<HashSet<HashSet<String>>> definirClassesDeEquivalencia(AutomatoFinitoDeterministico automato){
@@ -45,13 +71,10 @@ public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 				
 			}});
 		}};
-		
-				
+					
 		boolean contextoAlterado = true;
 		while(contextoAlterado){
 			contextoAlterado = false;
-			
-System.out.println(listaDeConjuntosDeClassesDeEquivalencia);
 			
 			for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
 				for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
@@ -82,17 +105,19 @@ System.out.println(listaDeConjuntosDeClassesDeEquivalencia);
 		}
 
 		
-		return null;
+		return listaDeConjuntosDeClassesDeEquivalencia;
 	}
 			
 	private boolean validarEquivalencia(AutomatoFinitoDeterministico automato, String estado1, String estado2, ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia){
+		// Compara as transições de _estado1 e _estado2 por cada _simbolo do Alfabeto para validar sua equivalencia.
+		
 		if(estado1.equals(estado2)){
 			return true;
 		}
 		else{
 			for(String simbolo : automato.getAlfabeto()){
 
-				if(!verificarEquivalencia(
+				if(!consultarEquivalencia(
 						automato.getEstadoDestino(new Transicao(estado1, simbolo)),
 						automato.getEstadoDestino(new Transicao(estado2, simbolo)),
 						listaDeConjuntosDeClassesDeEquivalencia
@@ -104,7 +129,9 @@ System.out.println(listaDeConjuntosDeClassesDeEquivalencia);
 		}
 	}
 	
-	private boolean verificarEquivalencia(String estado1, String estado2, ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia){
+	private boolean consultarEquivalencia(String estado1, String estado2, ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia){
+		//	Consulta a _listaDeconjuntosDeEstadosDeEquivalencia e informa se _estado1 e _estado2 pertencem à mesma _classeDeEquivalencia.
+
 		if(estado1 == null || estado2 == null){
 			return (estado1 == null && estado2 == null);
 		}
@@ -127,4 +154,15 @@ System.out.println(listaDeConjuntosDeClassesDeEquivalencia);
 		return false;
 	}
 	
+	private HashSet<String> identificarClasseDeEquivalencia(String estado, ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia){
+		for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
+			for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
+				if(classeDeEquivalencia.contains(estado)){
+					return classeDeEquivalencia;
+				}
+			}
+		}
+		
+		return null;
+	}
 }

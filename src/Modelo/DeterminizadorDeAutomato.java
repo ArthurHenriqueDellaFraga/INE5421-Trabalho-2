@@ -7,8 +7,7 @@ import Comum.Primitiva.Transicao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 
-public class DeterminizadorDeAutomato  extends ManipuladorDeAutomato{
-	private static final String SIMBOLO_DE_CONCATENACAO_DE_ESTADOS = ":";
+public class DeterminizadorDeAutomato extends ManipuladorDeAutomato{
 
 	public DeterminizadorDeAutomato(){
 		
@@ -80,7 +79,7 @@ public class DeterminizadorDeAutomato  extends ManipuladorDeAutomato{
 				for(String simbolo : automato.getAlfabeto()){
 					Transicao transicao = new Transicao(estado, simbolo);
 					
-					_tabelaDeTransicao.putAll(calcularTransicao(automato, transicao));
+					_tabelaDeTransicao.putAll(definirTransicoesDeEstadoMesclado(automato, transicao));
 					if(_tabelaDeTransicao.containsKey(transicao)){
 						conjuntoDeEstadosAlcancaveis.add(_tabelaDeTransicao.get(transicao));
 					}
@@ -113,7 +112,9 @@ public class DeterminizadorDeAutomato  extends ManipuladorDeAutomato{
 		);	
 	}
 	
-	private HashMap<Transicao, String> calcularTransicao(AutomatoFinitoNaoDeterministico automato, Transicao transicao) {		
+	//OUTROS 
+	
+	protected HashMap<Transicao, String> definirTransicoesDeEstadoMesclado(AutomatoFinitoNaoDeterministico automato, Transicao transicao) {		
 		HashSet<String> conjuntoDeEstados = new HashSet<String>();
 		
 		for(String estado : transicao.ESTADO.split(SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)){
@@ -133,17 +134,6 @@ public class DeterminizadorDeAutomato  extends ManipuladorDeAutomato{
 				put(transicao, novoEstado);
 			}
 		}};
-	}
-
-	private String gerarNovoEstadoMesclado(HashSet<String> conjuntoDeEstados){
-		if(!conjuntoDeEstados.isEmpty()){
-			return conjuntoDeEstados.toString()
-					.replaceAll(",", SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)
-					.replaceAll(" ", "")
-					.replaceAll("[\\[\\]]", "");
-		}
-		
-		return null;
 	}
 
 }

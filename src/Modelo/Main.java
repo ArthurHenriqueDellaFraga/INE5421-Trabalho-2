@@ -1,8 +1,6 @@
 package Modelo;
 
-import Controle.GerenteDaAplicacao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
-import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 
 public class Main {
 	
@@ -12,7 +10,8 @@ public class Main {
 		AutomatoFinitoDeterministico automato = AutomatoFinitoDeterministico.gerarExemplar();
 		System.out.println(automato.apresentacao());
 		
-		mini.minimizar(automato);
+		automato = mini.minimizar(automato);
+		System.out.println(automato.apresentacao());
 		
 //		GerenteDaAplicacao aplicacao = GerenteDaAplicacao.invocarInstancia();
 //		aplicacao.iniciar();

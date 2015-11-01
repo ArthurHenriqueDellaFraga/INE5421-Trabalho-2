@@ -13,6 +13,7 @@ public class NucleoDaAplicacao {
 	private static final ContextoDaAplicacao CONTEXTO_DA_APLICACAO = ContextoDaAplicacao.invocarInstancia();
 	
 	private final DeterminizadorDeAutomato DETERMINIZADOR_DE_AUTOMATO = new DeterminizadorDeAutomato();
+	private final MinimizadorDeAutomato MINIMIZADOR_DE_AUTOMATO = new MinimizadorDeAutomato();
 	private final ConversorDeGramaticaParaAutomato CONVERSOR_DE_GRAMATICA_PARA_AUTOMATO = new ConversorDeGramaticaParaAutomato();
 	private final ConversorDeAutomatoParaGramatica CONVERSOR_DE_AUTOMATO_PARA_GRAMATICA = new ConversorDeAutomatoParaGramatica();
 	private final ConversorDeExpressaoParaAutomato CONVERSOR_DE_EXPRESSAO_PARA_AUTOMATO = new ConversorDeExpressaoParaAutomato();
@@ -74,5 +75,17 @@ public class NucleoDaAplicacao {
 		);
 	}
 	
+	public void minimizar(AutomatoFinitoNaoDeterministico automato){
+		CONTEXTO_DA_APLICACAO.persistir(
+			MINIMIZADOR_DE_AUTOMATO.minimizar(
+					DETERMINIZADOR_DE_AUTOMATO.determinizar(automato)
+			)
+		);
+	}
 	
+	public void minimizar(AutomatoFinitoDeterministico automato){
+		CONTEXTO_DA_APLICACAO.persistir(
+			MINIMIZADOR_DE_AUTOMATO.minimizar(automato)
+		);
+	}
 }

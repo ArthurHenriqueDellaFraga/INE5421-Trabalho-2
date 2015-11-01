@@ -2,11 +2,14 @@ package Modelo;
 
 import java.util.HashMap;
 import java.util.HashSet;
+
 import Comum.Primitiva.Transicao;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
+import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 
 
 public abstract class ManipuladorDeAutomato {
+	protected static final String SIMBOLO_DE_CONCATENACAO_DE_ESTADOS = ":";
 	
 	public ManipuladorDeAutomato(){
 		
@@ -106,5 +109,18 @@ public abstract class ManipuladorDeAutomato {
 					removeAll(conjuntoDeEstados);
 				}}
 		);
+	}
+	
+	//OUTROS
+		
+	protected String gerarNovoEstadoMesclado(HashSet<String> conjuntoDeEstados){
+		if(!conjuntoDeEstados.isEmpty()){
+			return conjuntoDeEstados.toString()
+					.replaceAll(",", SIMBOLO_DE_CONCATENACAO_DE_ESTADOS)
+					.replaceAll(" ", "")
+					.replaceAll("[\\[\\]]", "");
+		}
+		
+		return null;
 	}
 }
