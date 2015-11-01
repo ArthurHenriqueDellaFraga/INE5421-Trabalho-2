@@ -24,10 +24,12 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 	public static AutomatoFinitoDeterministico gerarExemplar() {
 		return new AutomatoFinitoDeterministico(
 			"AutomatoFinitoDeterministico-Exemplo",
-			new HashSet<String>() {{	
+			new HashSet<String>() {{
 				add("S"); 
 				add("A");
 				add("B");
+				add("C");
+				add("D");
 			}},
 			new HashSet<String>() {{	
 				add("a"); 
@@ -36,12 +38,19 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 			}},
 			new HashMap<Transicao, String>() {{	
 				put(new Transicao("S", "a"),"A");
-				put(new Transicao("A", "b"),"B"); 
+				put(new Transicao("S", "b"),"B");
+				put(new Transicao("A", "b"),"B");
+				put(new Transicao("A", "c"),"C");
+				put(new Transicao("B", "b"),"A");
+				put(new Transicao("B", "c"),"C");
+				put(new Transicao("C", "c"),"C");
+				put(new Transicao("D", "a"),"B");
+				put(new Transicao("D", "b"),"A");		
 			}},
 			"S",
 			new HashSet<String>() {{	
 				add("S"); 
-				add("B");	
+				add("C");	
 			}}
 		);
 	}

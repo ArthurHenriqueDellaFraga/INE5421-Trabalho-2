@@ -1,7 +1,6 @@
 package Modelo;
 
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 
 import Comum.Primitiva.Transicao;
@@ -46,38 +45,42 @@ public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 				
 			}});
 		}};
+		
+				
+		boolean contextoAlterado = true;
+		while(contextoAlterado){
+			contextoAlterado = false;
 			
-		for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
-			HashSet<HashSet<String>> _conjuntoDeClassesDeEquivalencia = new HashSet<HashSet<String>>(conjuntoDeClassesDeEquivalencia);
-		
-			for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
-				HashSet<String> _classeDeEquivalencia = new HashSet<String>();
-		
-				for(String estado1 : classeDeEquivalencia){
+System.out.println(listaDeConjuntosDeClassesDeEquivalencia);
+			
+			for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
+				for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
+					HashSet<String> _classeDeEquivalencia = new HashSet<String>();
+				
+					String estado1 = classeDeEquivalencia.iterator().next();
 					for(String estado2 : new HashSet<String>(classeDeEquivalencia)){
 							
 						if(!validarEquivalencia(automato, estado1, estado2, listaDeConjuntosDeClassesDeEquivalencia)){
 							_classeDeEquivalencia.add(estado2);
-							//classeDeEquivalencia.remove(estado2);
 						}	
 					}
 					
 					if(!_classeDeEquivalencia.isEmpty()){
-						_conjuntoDeClassesDeEquivalencia.remove(classeDeEquivalencia);
-						_conjuntoDeClassesDeEquivalencia.add(_classeDeEquivalencia);
-						_conjuntoDeClassesDeEquivalencia.add(
+						conjuntoDeClassesDeEquivalencia.remove(classeDeEquivalencia);
+						conjuntoDeClassesDeEquivalencia.add(_classeDeEquivalencia);
+						conjuntoDeClassesDeEquivalencia.add(
 								new HashSet<String>(){{
-									addAll(classeDeEquivalencia);
+									addAll(classeDeEquivalencia); 
 									removeAll(_classeDeEquivalencia);
-								}};
-						)
+								}}
+						);							
+						contextoAlterado = true;
+						break;
 					}
-					break;
 				}
-				
 			}
 		}
-		
+
 		
 		return null;
 	}
