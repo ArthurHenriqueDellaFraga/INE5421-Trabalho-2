@@ -94,6 +94,8 @@ public abstract class AutomatoFinito extends Artefato implements EstruturaFormal
 		return conjuntoDeEstadosDescendente;
 	}
 	
+	public abstract void renomearEstado(String estadoAtual, String estadoNovo);
+	
 	//OUTROS
 	
 	public String apresentacao(){
