@@ -120,6 +120,35 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 	
 	//OUTROS
 
-	
-
+	public void renomearEstado(String estadoAtual, String estadoNovo) {
+		if(conjuntoDeEstados.remove(estadoAtual)){
+			conjuntoDeEstados.add(estadoNovo);
+			
+			tabelaDeTransicao = new HashMap<Transicao, String>(){{
+				for(Transicao transicao : tabelaDeTransicao.keySet()){
+					Transicao _transicao = transicao;
+					String _estadoDestino = tabelaDeTransicao.get(transicao);;
+					
+					if(_estadoDestino.equals(estadoAtual)){
+						_estadoDestino = estadoNovo;
+					}
+					
+					if(_transicao.ESTADO.equals(estadoAtual)){
+						_transicao = new Transicao(estadoNovo, transicao.SIMBOLO);
+					}
+					
+					put(_transicao, _estadoDestino);
+				}
+			}};
+			super.tabelaDeTransicao = tabelaDeTransicao;
+			
+			if(estadoInicial.equals(estadoAtual)){
+				estadoInicial = estadoNovo;
+			}
+			
+			if(conjuntoDeEstadosFinais.remove(estadoAtual)){
+				conjuntoDeEstadosFinais.add(estadoNovo);
+			}
+		}
+	}
 }

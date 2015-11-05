@@ -8,9 +8,9 @@ public class Main {
 		MinimizadorDeAutomato mini = new MinimizadorDeAutomato();
 		
 		AutomatoFinitoDeterministico automato = AutomatoFinitoDeterministico.gerarExemplar();
-		System.out.println(automato.apresentacao());
+		//System.out.println(automato.apresentacao());
 		
-		automato = mini.minimizar(automato);
+		automato.renomearEstado("S", "S1");
 		System.out.println(automato.apresentacao());
 		
 //		GerenteDaAplicacao aplicacao = GerenteDaAplicacao.invocarInstancia();
