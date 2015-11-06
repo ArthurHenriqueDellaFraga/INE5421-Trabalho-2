@@ -8,7 +8,7 @@ import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
 
 
-public abstract class ManipuladorDeAutomato {
+public abstract class ManipuladorDeAutomato implements ConceitoDeLinguagensFormais{
 	protected static final String SIMBOLO_DE_CONCATENACAO_DE_ESTADOS = ":";
 	
 	public ManipuladorDeAutomato(){

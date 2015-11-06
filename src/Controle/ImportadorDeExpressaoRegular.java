@@ -75,6 +75,14 @@ public class ImportadorDeExpressaoRegular {
 		}
 	}
 
+	public ExpressaoRegular validarExpressaoRegular(ExpressaoRegular expressaoRegular){
+		char[] expressao = validarImportacao(expressaoRegular.SENTENCA);
+		if (expressao != null) {
+			return comporExpressaoRegular(expressaoRegular.IDENTIFICADOR, expressao);
+		}
+		return null;
+	}
+	
 	private char[] validarImportacao(String texto) {
 		String validacaoErros = "ERROS: ";
 		Stack<String> parenteses = new Stack<String>();

@@ -13,7 +13,7 @@ import Persistencia.Artefato;
 public class ComunicacaoDaAplicacao extends VisaoAbstrato {
 	private static ComunicacaoDaAplicacao INSTANCIA;
 	
-	private ComunicacaoDaAplicacao(){
+	public ComunicacaoDaAplicacao(){
 		
 	}
 	

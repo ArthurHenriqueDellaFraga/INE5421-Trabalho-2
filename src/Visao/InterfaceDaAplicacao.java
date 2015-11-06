@@ -32,7 +32,7 @@ public class InterfaceDaAplicacao extends VisaoAbstrato{
 	protected final JFrame FRAME_FAMILIAR;
 	
 	private InterfaceDaAplicacao(){
-		FRAME_FAMILIAR = new JFrame("INE5421 • 1º Trabalho • 2015.2");		
+		FRAME_FAMILIAR = new JFrame("INE5421 • 2º Trabalho • 2015.2");		
 		FRAME_FAMILIAR.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		FRAME_FAMILIAR.setLocation(50, 50);
 		FRAME_FAMILIAR.setSize(500, 500);
@@ -49,6 +49,25 @@ public class InterfaceDaAplicacao extends VisaoAbstrato{
 	//FUNCOES
 	
 	public void iniciar(){
+		JPanel panel = new JPanel(){{
+			add(
+				new JButton("Realizar Analise Lexica"){{
+					addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){					
+							GERENTE_DA_APLICACAO.realizarAnaliseLexica();
+						}
+					});
+				}},	
+				BorderLayout.CENTER
+			);
+		}};
+		
+		FRAME_FAMILIAR.add(panel);
+		FRAME_FAMILIAR.setLocationRelativeTo(null);
+		FRAME_FAMILIAR.setVisible(true);
+	}
+	
+	public void iniciar2(){
 		JTabbedPane paginacao = new JTabbedPane(){{
 			add(gerarPaginaAutomatoFinito(), "Automato Finito");
 			add(gerarPaginaGramaticaRegular(), "Gramatica Regular");

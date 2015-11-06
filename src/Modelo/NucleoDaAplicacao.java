@@ -1,5 +1,10 @@
 package Modelo;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
+import Controle.ImportadorDeExpressaoRegular;
+import Modelo.AnalizadorLexico.CategoriaDeTokem;
 import Modelo.EstruturaFormal.AutomatoFinito;
 import Modelo.EstruturaFormal.AutomatoFinitoDeterministico;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
@@ -14,6 +19,8 @@ public class NucleoDaAplicacao {
 	
 	private final DeterminizadorDeAutomato DETERMINIZADOR_DE_AUTOMATO = new DeterminizadorDeAutomato();
 	private final MinimizadorDeAutomato MINIMIZADOR_DE_AUTOMATO = new MinimizadorDeAutomato();
+	private final UnidorDeAutomato UNIDOR_DE_AUTOMATO = new UnidorDeAutomato();
+	
 	private final ConversorDeGramaticaParaAutomato CONVERSOR_DE_GRAMATICA_PARA_AUTOMATO = new ConversorDeGramaticaParaAutomato();
 	private final ConversorDeAutomatoParaGramatica CONVERSOR_DE_AUTOMATO_PARA_GRAMATICA = new ConversorDeAutomatoParaGramatica();
 	private final ConversorDeExpressaoParaAutomato CONVERSOR_DE_EXPRESSAO_PARA_AUTOMATO = new ConversorDeExpressaoParaAutomato();
@@ -87,5 +94,10 @@ public class NucleoDaAplicacao {
 		CONTEXTO_DA_APLICACAO.persistir(
 			MINIMIZADOR_DE_AUTOMATO.minimizar(automato)
 		);
+	}
+
+	public HashMap<CategoriaDeTokem, HashSet<String>> realizarAnaliseLexica(String codigoFonte) {
+		return AnalizadorLexico.invocarInstancia().realizarAnaliseLexica(codigoFonte);
+		
 	}
 }

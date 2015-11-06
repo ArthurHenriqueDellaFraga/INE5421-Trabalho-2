@@ -15,8 +15,22 @@ public class UnidorDeAutomato extends ManipuladorDeAutomato{
 	
 	//FUNCOES
 	
-	public AutomatoFinitoDeterministico unir(HashSet<AutomatoFinitoDeterministico> conjuntoDeAutomatos){
-		String _estadoInicial = "#";
+	public AutomatoFinitoNaoDeterministico unir(HashSet<AutomatoFinitoDeterministico> conjuntoDeAutomatos){
+		String _identificador = gerarNovoEstadoMesclado(
+			new HashSet<String>(){{
+				for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
+					add(automato.IDENTIFICADOR);
+				}
+			}}
+		);
+		
+		String _estadoInicial = gerarNovoEstadoMesclado(
+			new HashSet<String>() {{
+				for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
+					add(automato.getEstadoInicial());
+				}
+			}}
+		);
 		
 		HashSet<String> _conjuntoDeEstados = new HashSet<String>(){{
 			add(_estadoInicial);
@@ -31,28 +45,36 @@ public class UnidorDeAutomato extends ManipuladorDeAutomato{
 			}
 		}};
 		
-		HashMap<Transicao, String> _tabelaDeTransicao = new HashMap<Transicao, String>(){{
+		HashSet<String> _alfabeto = new HashSet<String>(){{
 			for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
-				(automato.getTabelaDeTransicao());
+				addAll(automato.getAlfabeto());
+			}
+			add(SIMBOLO_EPSILON);
+		}};
+		
+		HashMap<Transicao, HashSet<String>> _tabelaDeTransicao = new HashMap<Transicao, HashSet<String>>(){{
+			for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
+				for(Transicao transicao : automato.getTabelaDeTransicao().keySet()){
+					put(transicao, automato.getConjuntoDeEstadosDestino(transicao));
+				}
+				put(new Transicao(_estadoInicial, SIMBOLO_EPSILON), new HashSet<String>(){{ add(automato.getEstadoInicial()); }});
 			}
 		}};
 		
-		_tabelaDeTransicao.
-		
-		
-		new AutomatoFinitoNaoDeterministico(
-				gerarNovoEstadoMesclado(
-					new HashSet<String>(){{
-						for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
-							add(automato.IDENTIFICADOR);
-						}
-					}}
-				),
-				_conjuntoDeEstados,
-				_alfabeto, _tabelaDeTransicao, _estadoInicial, _conjuntoDeEstadosFinais)
-		);
-		
-		return new DeterminizadorDeAutomato().determinizar(
+		HashSet<String> _conjuntoDeEstadosFinais = new HashSet<String>(){{
+			for(AutomatoFinitoDeterministico automato : conjuntoDeAutomatos){
+				addAll(automato.getConjuntoDeEstadosFinais());
+			}
+		}};
 				
+		return new AutomatoFinitoNaoDeterministico(
+				_identificador,
+				_conjuntoDeEstados,
+				_alfabeto,
+				_tabelaDeTransicao,
+				_estadoInicial,
+				_conjuntoDeEstadosFinais
+		);				
 	}
+
 }

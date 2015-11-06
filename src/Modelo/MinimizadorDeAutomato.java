@@ -59,6 +59,7 @@ public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 	}
 
 	private ArrayList<HashSet<HashSet<String>>> definirClassesDeEquivalencia(AutomatoFinitoDeterministico automato){
+		
 		ArrayList<HashSet<HashSet<String>>> listaDeConjuntosDeClassesDeEquivalencia = new ArrayList<HashSet<HashSet<String>>>(){{
 			add(new HashSet<HashSet<String>>(){{
 				add(automato.getConjuntoDeEstadosFinais());
@@ -76,10 +77,11 @@ public class MinimizadorDeAutomato extends ManipuladorDeAutomato{
 		while(contextoAlterado){
 			contextoAlterado = false;
 			
+			
 			for(HashSet<HashSet<String>> conjuntoDeClassesDeEquivalencia : listaDeConjuntosDeClassesDeEquivalencia){
 				for(HashSet<String> classeDeEquivalencia : conjuntoDeClassesDeEquivalencia){
 					HashSet<String> _classeDeEquivalencia = new HashSet<String>();
-				
+					
 					String estado1 = classeDeEquivalencia.iterator().next();
 					for(String estado2 : new HashSet<String>(classeDeEquivalencia)){
 							

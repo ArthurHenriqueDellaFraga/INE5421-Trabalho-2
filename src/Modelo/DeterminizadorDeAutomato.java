@@ -90,7 +90,7 @@ public class DeterminizadorDeAutomato extends ManipuladorDeAutomato{
 			conjuntoDeEstadosParaDeterminizar = new HashSet<String>(){{ addAll(conjuntoDeEstadosAlcancaveis); removeAll(conjuntoDeEstadosJaDeterminizado); }};
 		}
 		
-		conjuntoDeEstadosAlcancaveis.remove(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO);
+		//conjuntoDeEstadosAlcancaveis.remove(ConceitoDeLinguagensFormais.ESTADO_DE_ACEITACAO);
 		
 		HashSet _conjuntoDeEstadosFinais = new HashSet<String>();
 		

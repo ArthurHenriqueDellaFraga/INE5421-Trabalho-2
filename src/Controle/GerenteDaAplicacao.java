@@ -1,6 +1,14 @@
 package Controle;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import Comum.Excecao.OperacaoCanceladaException;
+import Visao.ComunicacaoDaAplicacao;
 import Visao.InterfaceDaAplicacao;
 import Modelo.NucleoDaAplicacao;
 import Modelo.EstruturaFormal.AutomatoFinito;
@@ -13,6 +21,8 @@ public class GerenteDaAplicacao{
 	private static GerenteDaAplicacao INSTANCIA;
 	private static final NucleoDaAplicacao NUCLEO_DA_APLICACAO = NucleoDaAplicacao.invocarInstancia();
 	private static final InterfaceDaAplicacao INTERFACE_DA_APLICACAO = InterfaceDaAplicacao.invocarInstancia();
+	
+	private final ComunicacaoDaAplicacao COMUNICACAO_DA_APLICACAO = new ComunicacaoDaAplicacao();
 	
 	private final ImportadorDeGramaticaRegular IMPORTADOR_DE_GRAMATICA = new ImportadorDeGramaticaRegular();
 	private final ImportadorDeExpressaoRegular IMPORTADOR_DE_EXPRESSAO = new ImportadorDeExpressaoRegular();
@@ -84,5 +94,42 @@ public class GerenteDaAplicacao{
 	public void importarAutomatoFinito() {
 		INTERFACE_DA_APLICACAO.apresentarMensagemDeErro("Funcionalidade Não Implementada", "Importar Automato Finito");
 		
+	}
+
+	public void realizarAnaliseLexica() {
+		File file = COMUNICACAO_DA_APLICACAO.coletarArquivo("txt");
+
+		BufferedReader leitor = null;
+		try {
+			leitor = new BufferedReader(new FileReader(file));
+		} catch (FileNotFoundException e) {
+			COMUNICACAO_DA_APLICACAO.apresentarMensagemDeErro("ERRO: Arquivo nao encontrado.", "Importação de Código fonte");
+			return;
+		}
+		
+
+		String linha = "";
+		ArrayList<String> texto = new ArrayList<String>();
+
+		do {
+			if (linha.length() != 0) {
+				texto.add(linha);
+			}
+
+			try {
+				linha = leitor.readLine();
+			} catch (IOException e) {
+				COMUNICACAO_DA_APLICACAO.apresentarMensagemDeErro(
+						"ERRO: Erro inesperado, desculpe-nos o inconveniente. \n Por favor vamos tente novamente.", "Leitura de arquivo");
+				return;
+			}
+		} while (linha != null);
+		
+		String codigoFonte = "";
+		for(String trecho : texto){
+			codigoFonte += trecho;
+		}
+		
+		COMUNICACAO_DA_APLICACAO.apresentarMensagemDeInformacao(NUCLEO_DA_APLICACAO.realizarAnaliseLexica(codigoFonte).toString(), "Analise Lexica");
 	}
 }

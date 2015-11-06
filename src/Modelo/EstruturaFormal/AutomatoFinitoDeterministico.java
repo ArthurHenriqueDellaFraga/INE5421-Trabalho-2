@@ -27,32 +27,22 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 			new HashSet<String>() {{
 				add("S"); 
 				add("A");
-				add("B");
-				add("C");
-				add("D");
+				add("Tipo");
 				
 			}},
 			new HashSet<String>() {{	
 				add("a"); 
 				add("b");
-				add("c");
 			}},
 			new HashMap<Transicao, String>() {{	
-				put(new Transicao("S", "a"),"A");
-				put(new Transicao("S", "b"),"B");
-				put(new Transicao("A", "b"),"D");
-				put(new Transicao("A", "c"),"C");
-				put(new Transicao("B", "b"),"D");
-				put(new Transicao("B", "c"),"C");
-				put(new Transicao("C", "c"),"C");
-				put(new Transicao("D", "a"),"B");
-				put(new Transicao("D", "b"),"A");		
+				put(new Transicao("S", "b"), "A");
+				put(new Transicao("A", "a"), "Tipo");
+				put(new Transicao("Tipo", "a"), "Tipo");		
 			}},
 			"S",
 			new HashSet<String>() {{	
-				add("S"); 
-				add("C");	
-				add("D");
+				add("S");	
+				add("Tipo");
 			}}
 		);
 	}
