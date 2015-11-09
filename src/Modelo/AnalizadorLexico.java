@@ -23,33 +23,114 @@ public class AnalizadorLexico implements ConceitoDeLinguagensFormais{
 			return Erro;
 		}
 	}	
-	private AutomatoFinitoDeterministico AUTOMATO = AutomatoFinitoDeterministico.gerarExemplar();
+	private AutomatoFinitoDeterministico AUTOMATO = new AutomatoFinitoDeterministico(
+			"Analisador Lexico",
+			new HashSet<String>(){{
+				for(int i = 1; i <= 16; i++){
+					add("Q" + i);
+				}
+			}},
+			new HashSet<String>(){{
+				for(int i = 33; i < 123; i++){
+					add(Character.toString((char) i));
+				}
+			}},
+			new HashMap<Transicao, String>(){{
+				//Tipo
+				put(new Transicao("Q1", "N"), "Q2");
+				put(new Transicao("Q1", "S"), "Q2");
+				put(new Transicao("Q1", "B"), "Q2");
+				put(new Transicao("Q2", "["), "Q3");
+				put(new Transicao("Q3", "]"), "Q4");
+				put(new Transicao("Q4", "["), "Q5");
+				put(new Transicao("Q5", "]"), "Q6");
+				
+				//Palavras reservadas
+				put(new Transicao("Q1", "P"), "Q7");
+				put(new Transicao("Q1", "I"), "Q7");
+				put(new Transicao("Q1", "T"), "Q7");
+				put(new Transicao("Q1", "E"), "Q7");
+				put(new Transicao("Q1", "D"), "Q7");
+				put(new Transicao("Q1", "W"), "Q7");
+				put(new Transicao("Q1", "Z"), "Q8");
+				put(new Transicao("Q8", "P"), "Q7");
+				put(new Transicao("Q8", "I"), "Q7");
+				put(new Transicao("Q8", "W"), "Q7");
+				
+				//Identificadores
+				put(new Transicao("Q1", "_"), "Q9");
+				for(int estado = 9; estado <= 10; estado++){
+					for(int i = 0; i < 10; i++){
+						put(new Transicao("Q"+estado, ""+i), "Q10");
+					}
+					for(int i = 97; i < 123; i++){
+						put(new Transicao("Q"+estado, Character.toString((char) i)), "Q10");
+						put(new Transicao("Q"+estado, Character.toString((char) (i-32))), "Q10");
+					}
+				}
+				
+				//Operadores
+				put(new Transicao("Q1","A"),"Q11");
+				put(new Transicao("Q1","O"),"Q11");
+				put(new Transicao("Q1","+"),"Q11");
+				put(new Transicao("Q1","-"),"Q11");
+				put(new Transicao("Q1","*"),"Q11");
+				put(new Transicao("Q1","/"),"Q11");
+				put(new Transicao("Q1","<"),"Q12");
+				put(new Transicao("Q1",">"),"Q12");
+				put(new Transicao("Q1","="),"Q12");
+				put(new Transicao("Q12","="),"Q11");
+				put(new Transicao("Q13","="),"Q11");
+				put(new Transicao("Q1","!"),"Q13");
+				
+				//Constantes
+				put(new Transicao("Q1","\""),"Q14");
+				for(int i = 0; i < 10; i++){
+					put(new Transicao("Q14", ""+i), "Q14");
+				}
+				for(int i = 97; i < 123; i++){
+					put(new Transicao("Q14", Character.toString((char) i)), "Q14");
+					put(new Transicao("Q14", Character.toString((char) (i-32))), "Q14");
+				}
+				put(new Transicao("Q14","\""),"Q15");
+				put(new Transicao("Q1","V"),"Q15");
+				put(new Transicao("Q1","F"),"Q15");
+				for(int i = 0; i < 10; i++){
+					put(new Transicao("Q1", ""+i), "Q16");
+					put(new Transicao("Q16", ""+i), "Q16");
+				}			
+			}},
+			"Q1",
+			new HashSet<String>(){{
+				add("Q2");
+				add("Q4");
+				add("Q6");
+				add("Q7");
+				add("Q10");
+				add("Q11");
+				add("Q12");
+				add("Q15");
+				add("Q16");
+			}}
+	);
 	
-	private static final ImportadorDeExpressaoRegular IMPORTADOR_DE_EXPRESSAO = new ImportadorDeExpressaoRegular();
-	
-	private static final DeterminizadorDeAutomato DETERMINIZADOR_DE_AUTOMATO = new DeterminizadorDeAutomato();
-	private static final MinimizadorDeAutomato MINIMIZADOR_DE_AUTOMATO = new MinimizadorDeAutomato();
-	private static final UnidorDeAutomato UNIDOR_DE_AUTOMATO = new UnidorDeAutomato();
-	private static final ConversorDeExpressaoParaAutomato CONVERSOR_DE_EXPRESSAO_PARA_AUTOMATO = new ConversorDeExpressaoParaAutomato();
-	
-//	public AnalizadorLexico(HashSet<String> _conjuntoDeTipos, HashSet<String> _conjuntoDePalavrasReservadas, HashSet<String> _conjuntoDeOperacoes, HashSet<String> _conjuntoDeConstantes, HashSet<String> _conjuntoDeVariavies){
-//		AUTOMATO = DETERMINIZADOR_DE_AUTOMATO.determinizar(
-//				UNIDOR_DE_AUTOMATO.unir(
-//					new HashSet<AutomatoFinitoDeterministico>(){{
-//						add(gerarAutomatoFinitoIntermediario(CategoriaDeTokem.Tipo.toString(), _conjuntoDeTipos));
-//						add(gerarAutomatoFinitoIntermediario(CategoriaDeTokem.PalavraReservada.toString(), _conjuntoDePalavrasReservadas));
-//						add(gerarAutomatoFinitoIntermediario(CategoriaDeTokem.Operacao.toString(), _conjuntoDeOperacoes));
-//						add(gerarAutomatoFinitoIntermediario(CategoriaDeTokem.Constante.toString(), _conjuntoDeConstantes));
-//						add(gerarAutomatoFinitoIntermediario(CategoriaDeTokem.Variavel.toString(), _conjuntoDeVariavies));
-//					}}					
-//				)
-//			);
-//		
-//		System.out.println(AUTOMATO.apresentacao());
-//	}
+//	private static final ImportadorDeExpressaoRegular IMPORTADOR_DE_EXPRESSAO = new ImportadorDeExpressaoRegular();
+
 	
 	private AnalizadorLexico(){
+		AUTOMATO.renomearEstado("Q2", "Q2" + "_" + CategoriaDeTokem.Tipo);
+		AUTOMATO.renomearEstado("Q4", "Q4" + "_" + CategoriaDeTokem.Tipo);
+		AUTOMATO.renomearEstado("Q6", "Q6" + "_" + CategoriaDeTokem.Tipo);
 		
+		AUTOMATO.renomearEstado("Q7", "Q7" + "_" + CategoriaDeTokem.PalavraReservada);
+		
+		AUTOMATO.renomearEstado("Q10", "Q10" + "_" + CategoriaDeTokem.Variavel);
+		
+		AUTOMATO.renomearEstado("Q11", "Q11" + "_" + CategoriaDeTokem.Operacao);
+		AUTOMATO.renomearEstado("Q12", "Q12" + "_" + CategoriaDeTokem.Operacao);
+		
+		AUTOMATO.renomearEstado("Q15", "Q15" + "_" + CategoriaDeTokem.Constante);
+		AUTOMATO.renomearEstado("Q16", "Q16" + "_" + CategoriaDeTokem.Constante);
 	}
 	
 	public static AnalizadorLexico invocarInstancia(){
@@ -79,7 +160,7 @@ public class AnalizadorLexico implements ConceitoDeLinguagensFormais{
 	
 	private CategoriaDeTokem realizarAnaliseLexica(String estadoAtual, String entrada){
 		if(entrada.isEmpty()){
-			return CategoriaDeTokem.get(estadoAtual);
+			return CategoriaDeTokem.get(estadoAtual.split("_")[1]);
 		}
 		else{
 			String estadoDestino = AUTOMATO.getEstadoDestino(new Transicao(estadoAtual, entrada.substring(0, 1)));
@@ -92,54 +173,4 @@ public class AnalizadorLexico implements ConceitoDeLinguagensFormais{
 			}
 		}
 	}
-
-//	private static AutomatoFinitoDeterministico gerarAutomatoFinitoIntermediario(String _identificador, HashSet<String> _conjuntoDeSentencas){
-//		AutomatoFinitoNaoDeterministico _automato = UNIDOR_DE_AUTOMATO.unir(
-//				new HashSet<AutomatoFinitoDeterministico>(){{
-//					for(String sentenca : _conjuntoDeSentencas){
-//						add(
-//							DETERMINIZADOR_DE_AUTOMATO.determinizar(
-//								CONVERSOR_DE_EXPRESSAO_PARA_AUTOMATO.gerarAutomatoFinito(
-//									IMPORTADOR_DE_EXPRESSAO.validarExpressaoRegular(new ExpressaoRegular(sentenca, sentenca))
-//								)
-//							)
-//						);
-//					}
-//				}}
-//			);
-//		//System.out.println(_automato.apresentacao());
-//		
-//		AutomatoFinitoDeterministico determinisico = DETERMINIZADOR_DE_AUTOMATO.determinizar(
-//				new AutomatoFinitoNaoDeterministico(
-//						_automato.IDENTIFICADOR, 
-//						new HashSet<String>(){{
-//							addAll(_automato.getConjuntoDeEstados());
-//							add(_identificador);
-//						}},
-//						new HashSet<String>(){{
-//							addAll(_automato.getAlfabeto());
-//							add(SIMBOLO_EPSILON);
-//						}},
-//						new HashMap<Transicao, HashSet<String>>(){{
-//							putAll(_automato.getTabelaDeTransicao());
-//							
-//							for(String estadoFinal : _automato.getConjuntoDeEstadosFinais()){
-//								put(new Transicao(estadoFinal, SIMBOLO_EPSILON), new HashSet<String>() {{ add(_identificador); }});
-//							}
-//						}},
-//						_automato.getEstadoInicial(),
-//						new HashSet<String>() {{ 
-//							add(_identificador);
-//						}}
-//				)
-//			);
-//		determinisico.renomearEstado("+", _identificador);
-//		//System.out.println(determinisico.apresentacao());
-//		
-//		AutomatoFinitoDeterministico minimo = MINIMIZADOR_DE_AUTOMATO.minimizar(determinisico);
-//		//System.out.println("\n" + _identificador + " :::\n" + minimo.apresentacao());
-//		
-//		return minimo;
-//	}
-
 }

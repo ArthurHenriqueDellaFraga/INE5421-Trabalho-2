@@ -14,7 +14,7 @@ public class AutomatoFinitoDeterministico extends AutomatoFinito {
 		
 		assert !alfabeto.contains(SIMBOLO_EPSILON);
 		
-		completar(this);
+		//completar(this);
 	}
 	
 	private AutomatoFinitoDeterministico(AutomatoFinitoDeterministico automato){
