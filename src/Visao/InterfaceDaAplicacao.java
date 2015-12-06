@@ -51,10 +51,10 @@ public class InterfaceDaAplicacao extends VisaoAbstrato{
 	public void iniciar(){
 		JPanel panel = new JPanel(){{
 			add(
-				new JButton("Realizar Analise Lexica"){{
+				new JButton("Realizar Analise Sintatica"){{
 					addActionListener(new ActionListener(){
 						public void actionPerformed(ActionEvent e){					
-							GERENTE_DA_APLICACAO.realizarAnaliseLexica();
+							GERENTE_DA_APLICACAO.realizarAnaliseSintatica();
 						}
 					});
 				}},	

@@ -46,10 +46,7 @@ public class NucleoDaAplicacao {
 	//FUNCOES 
 	
 	public void iniciar(){
-		persistir(AutomatoFinitoNaoDeterministico.gerarExemplar());
-		persistir(AutomatoFinitoDeterministico.gerarExemplar());
-		persistir(GramaticaRegular.gerarExemplar());
-		persistir(ExpressaoRegular.gerarExemplar());
+		
 	}
 	
 	public void gerarAutomatoFinito(GramaticaRegular gramatica) {
@@ -98,6 +95,15 @@ public class NucleoDaAplicacao {
 
 	public HashMap<CategoriaDeTokem, HashSet<String>> realizarAnaliseLexica(String codigoFonte) {
 		return AnalizadorLexico.invocarInstancia().realizarAnaliseLexica(codigoFonte);
-		
+	}
+	
+	public String realizarAnaliseSintatica(HashMap<CategoriaDeTokem, HashSet<String>> tabelaDeToken, String codigoFonte){
+		try{
+			String analise = AnalisadorSintatico.invocarInstancia().realizarAnaliseSintatica(tabelaDeToken, codigoFonte);
+			return analise;
+		}
+		catch(RuntimeException e){
+			return e.getMessage();
+		}
 	}
 }

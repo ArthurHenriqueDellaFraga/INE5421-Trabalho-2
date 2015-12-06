@@ -117,7 +117,7 @@ public class AnalizadorLexico implements ConceitoDeLinguagensFormais{
 //	private static final ImportadorDeExpressaoRegular IMPORTADOR_DE_EXPRESSAO = new ImportadorDeExpressaoRegular();
 
 	
-	private AnalizadorLexico(){
+	AnalizadorLexico(){
 		AUTOMATO.renomearEstado("Q2", "Q2" + "_" + CategoriaDeTokem.Tipo);
 		AUTOMATO.renomearEstado("Q4", "Q4" + "_" + CategoriaDeTokem.Tipo);
 		AUTOMATO.renomearEstado("Q6", "Q6" + "_" + CategoriaDeTokem.Tipo);

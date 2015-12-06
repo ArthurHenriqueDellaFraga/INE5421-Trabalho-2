@@ -6,10 +6,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import Comum.Excecao.OperacaoCanceladaException;
 import Visao.ComunicacaoDaAplicacao;
 import Visao.InterfaceDaAplicacao;
+import Modelo.AnalizadorLexico.CategoriaDeTokem;
 import Modelo.NucleoDaAplicacao;
 import Modelo.EstruturaFormal.AutomatoFinito;
 import Modelo.EstruturaFormal.AutomatoFinitoNaoDeterministico;
@@ -96,7 +99,11 @@ public class GerenteDaAplicacao{
 		
 	}
 
-	public void realizarAnaliseLexica() {
+	public HashMap<CategoriaDeTokem, HashSet<String>> realizarAnaliseLexica(String codigoFonte) {
+		return NUCLEO_DA_APLICACAO.realizarAnaliseLexica(codigoFonte);
+	}
+	
+	public void realizarAnaliseSintatica(){
 		File file = COMUNICACAO_DA_APLICACAO.coletarArquivo("txt");
 
 		BufferedReader leitor = null;
@@ -130,6 +137,9 @@ public class GerenteDaAplicacao{
 			codigoFonte += trecho;
 		}
 		
-		COMUNICACAO_DA_APLICACAO.apresentarMensagemDeInformacao(NUCLEO_DA_APLICACAO.realizarAnaliseLexica(codigoFonte).toString(), "Analise Lexica");
+		HashMap<CategoriaDeTokem, HashSet<String>> tabelaDeToken = realizarAnaliseLexica(codigoFonte);
+		COMUNICACAO_DA_APLICACAO.apresentarMensagemDeInformacao(tabelaDeToken.toString(), "Analise Lexica");
+		
+		COMUNICACAO_DA_APLICACAO.apresentarMensagemDeInformacao(NUCLEO_DA_APLICACAO.realizarAnaliseSintatica(tabelaDeToken, codigoFonte), "Analise Sintatica");
 	}
 }
